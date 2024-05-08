@@ -14,6 +14,8 @@
 #define START_X 2
 #define START_Y 0
 
+#define LOSS_Y 2
+
 class Tetris {
 public:
     explicit Tetris(MatrixOutput* matrix);
@@ -26,6 +28,7 @@ public:
     void rotate();
 
 private:
+    bool loss;
 
     Block* flyingBlock;
     volatile int blockX;

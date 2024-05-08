@@ -29,6 +29,8 @@ public:
     float green;
 
     bool equals(Color* compare) const;
+    void combine(Color* combination);
+    void add(Color* addition);
 
     void setRed(float value);
     void setGreen(float value);

@@ -17,12 +17,14 @@ void Tetris::init() {
 
 void Tetris::loop() {
     if (millis() - prevMillis >= frameSpeed) { // update display
-        mergeBlockIntoDisplay();
+        if (!loss) {
+            mergeBlockIntoDisplay();
+        }
         matrix->setDisplayData(&displayMap);
         matrix->sendData();
     }
 
-    if (millis() - prevMillis >= tickSpeed) { // update game
+    if (millis() - prevMillis >= tickSpeed && !loss) { // update game
         Serial.println("tick");
         tick();
 
@@ -37,9 +39,18 @@ void Tetris::tick() {
     if(detectCollision()) {
         mergeBlockIntoMap();
         detectAndDeleteRow();
+        detectLoss(); // after row deletion to give the player one last chance, although it won't help much
         generateNewBlock();
     }
-    Serial.println(blockX);
+
+    if (loss) {
+        // overlay with red color:
+        for (int i = 0; i < MATRIX_HEIGHT; ++i) {
+            for (int j = 0; j < MATRIX_LENGTH; ++j) {
+                displayMap[i][j].add(&slightlyRed);
+            }
+        }
+    }
 
     blockY++;
 }
@@ -48,6 +59,7 @@ Tetris::Tetris(MatrixOutput *matrix) {
     this->matrix = matrix;
     prevMillis = millis();
     scheduleRotation = false;
+    loss = false;
 }
 
 void Tetris::mergeBlockIntoDisplay() {
@@ -183,6 +195,8 @@ void Tetris::moveRight() {
 }
 
 void Tetris::rotate() {
+    // this might be bad nothing is volatile oopsie daisy -> implement scheduled rotation
+
 
     flyingBlock->rotateBlock();
     // we might need to push the block to the left, back into the screen:
@@ -228,5 +242,14 @@ void Tetris::detectAndDeleteRow() {
 
 
 
+}
+
+void Tetris::detectLoss() {
+    // as soon as a block embeds itself into the map at y = 2 -> game over
+    for (int i = 0; i < MATRIX_HEIGHT; ++i) {
+        if (map[i][LOSS_Y]) {
+            loss |= true;
+        }
+    }
 }
 

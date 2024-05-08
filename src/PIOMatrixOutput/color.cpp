@@ -128,6 +128,33 @@ bool Color::equals(Color *compare) const {
     return red == compare->red && green == compare->green && blue == compare->blue;
 }
 
+void Color::combine(Color *combination) {
+    // calculate the avg color
+    setRed((red + combination->red) /2);
+    setGreen((green + combination->green) /2);
+    setBlue((blue + combination->blue) /2);
+}
+
+void Color::add(Color *addition) {
+    // if the value overflows max value will be used
+    if (red + addition->red >= MAX_COLOR_VALUE) {
+        setRed(MAX_COLOR_VALUE);
+    } else {
+        setRed(red + addition->red);
+    }
+    if (green + addition->green >= MAX_COLOR_VALUE) {
+        setGreen(MAX_COLOR_VALUE);
+    } else {
+        setGreen(green + addition->green);
+    }
+    if (blue + addition->blue >= MAX_COLOR_VALUE) {
+        setBlue(MAX_COLOR_VALUE);
+    } else {
+        setBlue(blue + addition->blue);
+    }
+
+}
+
 
 
 
