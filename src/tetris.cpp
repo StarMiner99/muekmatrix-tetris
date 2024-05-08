@@ -36,6 +36,7 @@ void Tetris::tick() {
 
     if(detectCollision()) {
         mergeBlockIntoMap();
+        detectAndDeleteRow();
         generateNewBlock();
     }
     Serial.println(blockX);
@@ -201,6 +202,30 @@ void Tetris::rotate() {
     if (blockX + width > MATRIX_HEIGHT) {
         blockX = MATRIX_HEIGHT - width;
     }
+
+
+}
+
+void Tetris::detectAndDeleteRow() {
+    for (int i = 0; i < MATRIX_LENGTH; ++i) {
+        bool rowComplete = true;
+        for (int j = 0; j < MATRIX_HEIGHT; ++j) {
+            if (!map[j][i]) { // we turn around the display by 90° therefore swap
+                rowComplete = false;
+            }
+        }
+
+        if (rowComplete) {
+            // remove row
+            for (int j = 0; j < i; ++j) { // row 0 cant get a replacement
+                for (int k = 0; k < MATRIX_HEIGHT; ++k) {
+                    map[k][i-j] = map[k][i-j-1]; // get row above current row and copy it over
+                    colorMap[k][i-j] = colorMap[k][i-j-1];
+                }
+            }
+        }
+    }
+
 
 
 }

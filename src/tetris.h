@@ -45,6 +45,8 @@ private:
     void generateNewBlock();
 
     bool detectCollision();
+    void detectAndDeleteRow();
+    void detectLoss();
     static uint32_t genRandomNumber(int max);
 
     unsigned long prevMillis;
