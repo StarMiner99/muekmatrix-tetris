@@ -57,6 +57,7 @@ private:
     unsigned int frameSpeed = 17; // about 60fps
 
     void tick();
+    void handleScheduledActions();
 };
 
 

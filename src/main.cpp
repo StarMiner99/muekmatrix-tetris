@@ -50,7 +50,9 @@ void setup() {
     /*
     //matrix.setFrameBufferInterval(0); // we dont need this
     //matrix.enableFrameBuffer();
+     */
 
+    /*
     // first of all just for fun blind everyone:
     // populate list to be blinded:
     for (int i = 0; i < 8; ++i) {

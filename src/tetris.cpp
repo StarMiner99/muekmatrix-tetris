@@ -18,6 +18,7 @@ void Tetris::init() {
 void Tetris::loop() {
     if (millis() - prevMillis >= frameSpeed) { // update display
         if (!loss) {
+            handleScheduledActions();
             mergeBlockIntoDisplay();
         }
         matrix->setDisplayData(&displayMap);
@@ -34,8 +35,6 @@ void Tetris::loop() {
 }
 
 void Tetris::tick() {
-
-
     if(detectCollision()) {
         mergeBlockIntoMap();
         detectAndDeleteRow();
@@ -52,7 +51,57 @@ void Tetris::tick() {
         }
     }
 
-    blockY++;
+    blockY++; // move block down
+}
+
+void Tetris::handleScheduledActions() {
+    // handle rotation
+    if (scheduleRotation) {
+        scheduleRotation = false;
+
+        flyingBlock->rotateBlock();
+
+        // we might need to push the block to the left, back into the screen:
+        int width = 4;
+        bool inColumn = false;
+        for (int i = 3; i >= 0; --i) {
+            for (int j = 0; j < 4; ++j) {
+                inColumn |= (*flyingBlock->getBlockArray())[j][i];
+            }
+
+            if (!inColumn) {
+                width--;
+            }
+
+        }
+
+        if (blockX + width > MATRIX_HEIGHT) {
+            blockX = MATRIX_HEIGHT - width;
+        }
+
+        // we might want to forbid the rotation if it collides with other blocks or goes into the ground
+        // -> quick fix: just rotate it 3 more times (not the best solution, but it works)
+        bool forbidRotation = false;
+        for (int x = 0; x < 4; ++x) {
+            for (int y = 0; y < 4; ++y) {
+                int checkX = MATRIX_HEIGHT - 1 - (blockX + x);
+                if (checkX <= MATRIX_HEIGHT -1 && blockY + y <= MATRIX_LENGTH -1) { // check for collision with other blocks
+                    forbidRotation |= (*flyingBlock->getBlockArray())[y][x] && map[checkX][blockY + y];
+                }
+                if (blockY + y >= MATRIX_LENGTH && (*flyingBlock->getBlockArray())[y][x]) { // check for collision with ground
+                    forbidRotation |= true;
+                }
+            }
+        }
+
+        if (forbidRotation) { // cancel rotation
+            Serial.println("canceling rotation");
+            flyingBlock->rotateBlock();
+            flyingBlock->rotateBlock();
+            flyingBlock->rotateBlock();
+        }
+
+    }
 }
 
 Tetris::Tetris(MatrixOutput *matrix) {
@@ -195,29 +244,8 @@ void Tetris::moveRight() {
 }
 
 void Tetris::rotate() {
-    // this might be bad nothing is volatile oopsie daisy -> implement scheduled rotation
-
-
-    flyingBlock->rotateBlock();
-    // we might need to push the block to the left, back into the screen:
-    int width = 4;
-    bool inColumn = false;
-    for (int i = 3; i >= 0; --i) {
-        for (int j = 0; j < 4; ++j) {
-            inColumn |= (*flyingBlock->getBlockArray())[j][i];
-        }
-
-        if (!inColumn) {
-            width--;
-        }
-
-    }
-
-    if (blockX + width > MATRIX_HEIGHT) {
-        blockX = MATRIX_HEIGHT - width;
-    }
-
-
+    // rotation acts with non-volatile vars so we schedule it
+    scheduleRotation = true;
 }
 
 void Tetris::detectAndDeleteRow() {
@@ -252,4 +280,6 @@ void Tetris::detectLoss() {
         }
     }
 }
+
+
 
