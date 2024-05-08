@@ -123,6 +123,11 @@ float Color::getRGB(uint8_t colorNumber, bool raw) {
     return -1;
 }
 
+bool Color::equals(Color *compare) const {
+    // warning do not use for actual comparing, because comparing float should include an epsilon (this is enough for checking if a color is blank)
+    return red == compare->red && green == compare->green && blue == compare->blue;
+}
+
 
 
 

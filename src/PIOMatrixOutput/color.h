@@ -28,6 +28,8 @@ public:
     float red;
     float green;
 
+    bool equals(Color* compare) const;
+
     void setRed(float value);
     void setGreen(float value);
     void setBlue(float value);

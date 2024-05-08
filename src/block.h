@@ -18,10 +18,11 @@ private:
 public:
     Block(bool (*blockArray)[4][4], Color *color);
     Color (*getColorArray())[4][4];
+    bool (*getBlockArray())[4][4];
 
     void rotateBlock();
 
-    int getCollisionOnCol(int col);
+    int getLengthInColumn(int col);
 };
 
 
