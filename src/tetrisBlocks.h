@@ -54,5 +54,5 @@ bool (*blocks[BLOCK_COUNT])[4][4] = {&pieceI, &pieceJ, &pieceL, &pieceO, &pieceS
 #define COLOR_COUNT 6
 Color *blockColors[COLOR_COUNT] = {&colorBlue, &colorCyan, &colorGreen, &colorPurple, &colorRed, &colorYellow};
 
-Color slightlyRed(0.25, 0, 0);
+Color slightlyRed(0.125, 0, 0);
 #endif //TETRIS_TETRISBLOCKS_H
