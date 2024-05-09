@@ -29,6 +29,7 @@ public:
 
 private:
     bool loss;
+    uint8_t score;
 
     Block* flyingBlock;
     volatile int blockX;
@@ -40,10 +41,15 @@ private:
     bool map[8][16] = {};
     Color colorMap[8][16] = {};
 
+    Color overlayMap[8][16] = {};
+
     Color displayMap[8][16] = {};
 
     void mergeBlockIntoDisplay();
+    void mergeOverlayIntoDisplay();
     void mergeBlockIntoMap();
+
+    void generateOverlay();
 
     void generateNewBlock();
 
@@ -57,6 +63,7 @@ private:
     unsigned int frameSpeed = 17; // about 60fps
 
     void tick();
+    void graphicTick();
     void handleScheduledActions();
 };
 

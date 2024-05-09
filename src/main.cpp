@@ -53,6 +53,7 @@ void setup() {
      */
 
     /*
+
     // first of all just for fun blind everyone:
     // populate list to be blinded:
     for (int i = 0; i < 8; ++i) {
@@ -61,10 +62,12 @@ void setup() {
         }
     }
 
-    //matrix.setDisplayData(&ahhhh_im_blinded_by_the_light);
-    //matrix.sendData();
-    //delay(2000);
-    //matrix.clearDisplay();
+    // nah, don't uncomment this
+    matrix.setDisplayData(&ahhhh_im_blinded_by_the_light);
+    matrix.sendData();
+    delay(2000);
+    matrix.clearDisplay();
+    delay(1000);
      */
 
     pinMode(BUTTON_SELECT, INPUT_PULLDOWN);

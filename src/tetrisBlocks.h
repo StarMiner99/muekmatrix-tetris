@@ -12,21 +12,10 @@ bool pieceI[4][4] = {{1,1,1,1},
                      {0,0,0,0},
                      {0,0,0,0},
                      {0,0,0,0}};
-
-// 3 -> 0  3 - 3
-// 2 -> 1  3 - 2
-// 1 -> 2  3 - 1
-// 0 -> 3  3 - 0
-
-// max - x
-
-// 1 -> 0
-// 0 -> 1
 bool pieceJ[4][4] = {{1,0,0,0},
                      {1,1,1,0},
                      {0,0,0,0},
                      {0,0,0,0}};
-
 bool pieceL[4][4] = {{0,0,1,0},
                      {1,1,1,0},
                      {0,0,0,0},
@@ -55,4 +44,5 @@ bool (*blocks[BLOCK_COUNT])[4][4] = {&pieceI, &pieceJ, &pieceL, &pieceO, &pieceS
 Color *blockColors[COLOR_COUNT] = {&colorBlue, &colorCyan, &colorGreen, &colorPurple, &colorRed, &colorYellow};
 
 Color slightlyRed(0.125, 0, 0);
+Color overlayWhite(0.5, 0.5, 0.5);
 #endif //TETRIS_TETRISBLOCKS_H

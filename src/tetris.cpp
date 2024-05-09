@@ -17,12 +17,8 @@ void Tetris::init() {
 
 void Tetris::loop() {
     if (millis() - prevMillis >= frameSpeed) { // update display
-        if (!loss) {
-            handleScheduledActions();
-            mergeBlockIntoDisplay();
-        }
-        matrix->setDisplayData(&displayMap);
-        matrix->sendData();
+        graphicTick();
+
     }
 
     if (millis() - prevMillis >= tickSpeed && !loss) { // update game
@@ -52,6 +48,17 @@ void Tetris::tick() {
     }
 
     blockY++; // move block down
+}
+
+void Tetris::graphicTick() {
+    if (!loss) {
+        handleScheduledActions();
+        mergeBlockIntoDisplay();
+        generateOverlay();
+        mergeOverlayIntoDisplay();
+    }
+    matrix->setDisplayData(&displayMap);
+    matrix->sendData();
 }
 
 void Tetris::handleScheduledActions() {
@@ -109,6 +116,7 @@ Tetris::Tetris(MatrixOutput *matrix) {
     prevMillis = millis();
     scheduleRotation = false;
     loss = false;
+    score = 0;
 }
 
 void Tetris::mergeBlockIntoDisplay() {
@@ -186,16 +194,27 @@ uint32_t Tetris::genRandomNumber(int max) {
 }
 
 void Tetris::moveLeft() {
-    // our block always aligns with the left side so no need in calculating widths
+
+    // check if we would collide
 
     bool allowMove = true;
     for (int i = 0; i < 4; ++i) {
-        int checkX = MATRIX_HEIGHT - 1 - (blockX - 1);
-        if (checkX >= 0) {
-            if (map[checkX][blockY + i]) {
-                allowMove = false;
+        int widthOnRow = 4;
+        for (int j = 3; j >= 0; --j) {
+            if ((*flyingBlock->getBlockArray())[i][j]) {
+                widthOnRow = j;
             }
         }
+
+        if (widthOnRow != 4) {
+            int checkX = MATRIX_HEIGHT - 1 - (blockX - 1 + widthOnRow);
+            if (checkX >= 0) {
+                if (map[checkX][blockY + i] && (*flyingBlock->getBlockArray())[i][0]) {
+                    allowMove = false;
+                }
+            }
+        }
+
     }
 
     if (blockX - 1 >= 0 && allowMove) {
@@ -265,6 +284,7 @@ void Tetris::detectAndDeleteRow() {
                     colorMap[k][i-j] = colorMap[k][i-j-1];
                 }
             }
+            score++; // increase score
         }
     }
 
@@ -280,6 +300,23 @@ void Tetris::detectLoss() {
         }
     }
 }
+
+void Tetris::mergeOverlayIntoDisplay() {
+    for (int i = 0; i < MATRIX_LENGTH; ++i) {
+        for (int j = 0; j < MATRIX_HEIGHT; ++j) {
+            displayMap[j][i].add(&overlayMap[j][i]);
+        }
+    }
+}
+
+void Tetris::generateOverlay() {
+    // generate bar at top of field
+    for (int i = 0; i < MATRIX_HEIGHT; ++i) {
+        overlayMap[i][2] = overlayWhite;
+    }
+}
+
+
 
 
 
