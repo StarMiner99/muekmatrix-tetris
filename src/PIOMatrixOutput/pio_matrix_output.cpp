@@ -87,10 +87,10 @@ MatrixOutput::MatrixOutput(PIO pio, uint8_t sm, uint8_t dmaChannel, uint8_t pin_
     uint offset = pio_add_program(pio, &argb_program);
 
 
-    //init pio state machine
+    //reset pio state machine
     argb_program_init(pio, sm, offset, pin_1, pin_2, 32);
 
-    // init dma
+    // reset dma
     dmac = dma_channel_get_default_config(dmaChannel);
 
     channel_config_set_transfer_data_size(&dmac, DMA_SIZE_32);

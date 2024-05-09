@@ -77,7 +77,7 @@ void setup() {
 
     Serial.println("starting tetris...");
 
-    tetrisGame.init();
+    tetrisGame.reset();
 
 }
 

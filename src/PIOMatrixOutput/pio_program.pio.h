@@ -43,7 +43,7 @@ static inline pio_sm_config argb_program_get_default_config(uint offset) {
 static inline void argb_program_init(PIO pio, uint sm, uint offset, uint pin1, uint pin2, uint autoshift_size) {
     pio_sm_config c = argb_program_get_default_config(offset);
 
-    // init pins
+    // reset pins
     pio_gpio_init(pio, pin1);
     pio_gpio_init(pio, pin2);
 
@@ -76,7 +76,7 @@ static inline void argb_program_init(PIO pio, uint sm, uint offset, uint pin1, u
     float div = SystemCoreClock / (800000 * 9);
     sm_config_set_clkdiv(&c, div);
 
-    // init program
+    // reset program
     pio_sm_init(pio, sm, offset, &c);
 
     // stop program

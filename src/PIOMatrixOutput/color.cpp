@@ -155,6 +155,16 @@ void Color::add(Color *addition) {
 
 }
 
+void Color::multiply(float factor) {
+    setRed(red * factor);
+    setGreen(green * factor);
+    setBlue(green * factor);
+}
+
+Color* Color::clone() const {
+    return new Color{red, green , blue};
+}
+
 
 
 

@@ -11,8 +11,9 @@
 // let it fall
 // as soon as we touch something stop the block
 // repeat
-void Tetris::init() {
+void Tetris::reset() {
     generateNewBlock();
+    tickCnt = 0;
 }
 
 void Tetris::loop() {
@@ -22,7 +23,6 @@ void Tetris::loop() {
     }
 
     if (millis() - prevMillis >= tickSpeed && !loss) { // update game
-        Serial.println("tick");
         tick();
 
         prevMillis = millis();
@@ -46,8 +46,8 @@ void Tetris::tick() {
             }
         }
     }
-
     blockY++; // move block down
+    tickCnt++; // increment tick
 }
 
 void Tetris::graphicTick() {
@@ -102,7 +102,6 @@ void Tetris::handleScheduledActions() {
         }
 
         if (forbidRotation) { // cancel rotation
-            Serial.println("canceling rotation");
             flyingBlock->rotateBlock();
             flyingBlock->rotateBlock();
             flyingBlock->rotateBlock();
@@ -314,6 +313,31 @@ void Tetris::generateOverlay() {
     for (int i = 0; i < MATRIX_HEIGHT; ++i) {
         overlayMap[i][2] = overlayWhite;
     }
+    // generate binary counter score
+    // if someone has too much time... here you go if you manage to overflow 2^MATRIX_HEIGHT:
+
+    unsigned int overFlowBits = score >> MATRIX_HEIGHT;
+
+
+    for (int i = 0; i < MATRIX_HEIGHT; ++i) {
+
+        if (overFlowBits < TIER_COLOR_COUNT) {
+            Color modifiedColor(0,0,0);
+
+            modifiedColor.add(tierColors[overFlowBits]);
+            modifiedColor.multiply(1);
+            overlayMap[i][0] = (score >> i) % 2 ? modifiedColor : colorBlank;
+
+        } else {
+            // just spam random colors if someone does somehow reach 2^MATRIX_HEIGHT * TIER_COLOR_COUNT
+            overlayMap[i][0] = *tierColors[tickCnt % TIER_COLOR_COUNT];
+        }
+
+
+
+
+    }
+
 }
 
 

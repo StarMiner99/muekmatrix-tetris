@@ -20,7 +20,7 @@ class Tetris {
 public:
     explicit Tetris(MatrixOutput* matrix);
 
-    void init();
+    void reset();
     void loop();
 
     void moveLeft();
@@ -29,7 +29,9 @@ public:
 
 private:
     bool loss;
-    uint8_t score;
+    unsigned int score;
+
+    unsigned int tickCnt;
 
     Block* flyingBlock;
     volatile int blockX;
