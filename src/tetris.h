@@ -11,6 +11,7 @@
 #include <hardware/structs/rosc.h>
 
 #define SCROLL_SPEED 400
+#define LOSS_DELAY 6000
 #define START_X 2
 #define START_Y 0
 
@@ -40,12 +41,12 @@ private:
 
     MatrixOutput* matrix;
 
-    bool map[8][16] = {};
-    Color colorMap[8][16] = {};
+    bool map[MATRIX_HEIGHT][MATRIX_LENGTH] = {};
+    Color colorMap[MATRIX_HEIGHT][MATRIX_LENGTH] = {};
 
-    Color overlayMap[8][16] = {};
+    Color overlayMap[MATRIX_HEIGHT][MATRIX_LENGTH] = {};
 
-    Color displayMap[8][16] = {};
+    Color displayMap[MATRIX_HEIGHT][MATRIX_LENGTH] = {};
 
     void mergeBlockIntoDisplay();
     void mergeOverlayIntoDisplay();

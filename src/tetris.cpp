@@ -12,6 +12,21 @@
 // as soon as we touch something stop the block
 // repeat
 void Tetris::reset() {
+    scheduleRotation = false;
+    loss = false;
+    score = 0;
+    prevMillis = millis();
+    // empty arrays
+    for (int i = 0; i < MATRIX_HEIGHT; ++i) {
+        for (int j = 0; j < MATRIX_LENGTH; ++j) {
+            map[i][j] = false;
+            colorMap[i][j] = colorBlank;
+            overlayMap[i][j] = colorBlank;
+            displayMap[i][j] = colorBlank;
+        }
+    }
+    
+    // create first block (resets x and y and flying block)
     generateNewBlock();
     tickCnt = 0;
 }
@@ -28,6 +43,10 @@ void Tetris::loop() {
         prevMillis = millis();
     }
 
+    if (loss && millis() - prevMillis >= LOSS_DELAY) {
+        reset();
+    }
+
 }
 
 void Tetris::tick() {
@@ -39,10 +58,10 @@ void Tetris::tick() {
     }
 
     if (loss) {
-        // overlay with red color:
+        // replace everything with red color:
         for (int i = 0; i < MATRIX_HEIGHT; ++i) {
             for (int j = 0; j < MATRIX_LENGTH; ++j) {
-                displayMap[i][j].add(&slightlyRed);
+                displayMap[i][j].set(&slightlyRed);
             }
         }
     }
@@ -112,10 +131,6 @@ void Tetris::handleScheduledActions() {
 
 Tetris::Tetris(MatrixOutput *matrix) {
     this->matrix = matrix;
-    prevMillis = millis();
-    scheduleRotation = false;
-    loss = false;
-    score = 0;
 }
 
 void Tetris::mergeBlockIntoDisplay() {
@@ -318,7 +333,6 @@ void Tetris::generateOverlay() {
 
     unsigned int overFlowBits = score >> MATRIX_HEIGHT;
 
-
     for (int i = 0; i < MATRIX_HEIGHT; ++i) {
 
         if (overFlowBits < TIER_COLOR_COUNT) {
@@ -332,10 +346,6 @@ void Tetris::generateOverlay() {
             // just spam colors in list order if someone does somehow reach 2^MATRIX_HEIGHT * TIER_COLOR_COUNT
             overlayMap[i][0] = *tierColors[tickCnt % TIER_COLOR_COUNT];
         }
-
-
-
-
     }
 
 }
