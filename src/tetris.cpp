@@ -324,12 +324,12 @@ void Tetris::generateOverlay() {
         if (overFlowBits < TIER_COLOR_COUNT) {
             Color modifiedColor(0,0,0);
 
-            modifiedColor.add(tierColors[overFlowBits]);
+            modifiedColor.set(tierColors[overFlowBits]);
             modifiedColor.multiply(1);
             overlayMap[i][0] = (score >> i) % 2 ? modifiedColor : colorBlank;
 
         } else {
-            // just spam random colors if someone does somehow reach 2^MATRIX_HEIGHT * TIER_COLOR_COUNT
+            // just spam colors in list order if someone does somehow reach 2^MATRIX_HEIGHT * TIER_COLOR_COUNT
             overlayMap[i][0] = *tierColors[tickCnt % TIER_COLOR_COUNT];
         }
 

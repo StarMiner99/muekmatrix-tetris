@@ -31,6 +31,7 @@ public:
     bool equals(Color* compare) const;
     void combine(Color* combination);
     void add(Color* addition);
+    void set(Color* newColor);
     void multiply(float factor);
 
     void setRed(float value);
@@ -51,8 +52,6 @@ public:
 
     Color(float red, float green, float blue);
     Color();
-
-    Color* clone() const;
 
     uint32_t calc();
 };

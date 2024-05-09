@@ -161,8 +161,10 @@ void Color::multiply(float factor) {
     setBlue(green * factor);
 }
 
-Color* Color::clone() const {
-    return new Color{red, green , blue};
+void Color::set(Color *newColor) {
+    setRed(newColor->red);
+    setGreen(newColor->green);
+    setBlue(newColor->blue);
 }
 
 
